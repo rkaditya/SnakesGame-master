@@ -1,0 +1,49 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool: Linux
+
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
+- script: echo "The build ID is $(Build.BuildId) & build number is $(Build.BuildNumber)." 
+  displayName: 'Printing the build ID and build number'
+
+- script: sudo apt update  && sudo apt-get install openjdk-8-jdk -y && java -version
+  displayName: 'Installing and chking java version'
+
+- script: ls -al && chmod 700 build.sh && sudo bash ./build.sh && ls -al
+  displayName: Run the build script
+
+- script: ls -la && mv ROOT.war ROOT$(Build.BuildId).war && ls -la
+  displayName: Renaming file ROOT.war
+
+
+
+- task: CopyFiles@2
+  inputs:
+    Contents: 'ROOT$(Build.BuildId).war'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    OverWrite: true
+
+- script: ls -al $(Build.ArtifactStagingDirectory)
+  displayName: listing artifcat
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'ROOT$(Build.BuildId).war'
+    publishLocation: 'Container'
+
+#- task: AzureCLI@2
+#  inputs:
+#    azureSubscription: 'SC'
+#    scriptType: 'bash'
+#   scriptLocation: 'inlineScript'
+#    inlineScript: 'az storage blob upload-batch --account-name artifact2134 --account-key $(STORAGE_ACCOUNT_KEY) destination buildartifacts --source /home/aka/_work/11/a/'
