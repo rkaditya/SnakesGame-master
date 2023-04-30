@@ -41,9 +41,20 @@ steps:
     ArtifactName: 'ROOT$(Build.BuildId).war'
     publishLocation: 'Container'
 
-#- task: AzureCLI@2
-#  inputs:
-#    azureSubscription: 'SC'
-#    scriptType: 'bash'
-#   scriptLocation: 'inlineScript'
-#    inlineScript: 'az storage blob upload-batch --account-name artifact2134 --account-key $(STORAGE_ACCOUNT_KEY) destination buildartifacts --source /home/aka/_work/11/a/'
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'Azure-AzureDevOps'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az storage blob upload-batch --account-name artifact2134 --destination buildartifacts --source $(Build.ArtifactStagingDirectory) --pattern **.war'
+
+- task: S3Upload@1
+  inputs:
+    awsCredentials: 'AWS-Azure'
+    regionName: 'us-east-1'
+    bucketName: 'young-minds-app-2'
+    sourceFolder: '$(Build.ArtifactStagingDirectory)'
+    globExpressions: '**'
+    filesAcl: 'bucket-owner-full-control'
+    createBucket: true
