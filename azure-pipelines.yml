@@ -42,12 +42,12 @@ steps:
     publishLocation: 'Container'
 
 
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'Azure-AzureDevOps'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az storage blob upload-batch --account-name artifact2134 --destination buildartifacts --source $(Build.ArtifactStagingDirectory) --pattern **.war'
+#- task: AzureCLI@2
+ # inputs:
+  #  azureSubscription: 'Azure-AzureDevOps'
+   # scriptType: 'bash'
+    #scriptLocation: 'inlineScript'
+    #inlineScript: 'az storage blob upload-batch --account-name artifact2134 --destination buildartifacts --source $(Build.ArtifactStagingDirectory) --pattern **.war'
 
 - task: S3Upload@1
   inputs:
