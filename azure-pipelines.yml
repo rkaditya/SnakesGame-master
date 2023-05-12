@@ -53,7 +53,7 @@ steps:
   inputs:
     awsCredentials: 'AWS-Azure'
     regionName: 'us-east-1'
-    bucketName: 'young-minds-app-2'
+    bucketName: 'Aditya-app-2'
     sourceFolder: '$(Build.ArtifactStagingDirectory)'
     globExpressions: '**'
     filesAcl: 'bucket-owner-full-control'
